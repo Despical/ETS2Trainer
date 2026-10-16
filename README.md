@@ -209,6 +209,6 @@ If you would like to support development: [GitHub Sponsors](https://github.com/s
 
 ## License
 
-Copyright (C) 2026 Despical. Licensed under **GNU GPL v3.0 or later**; see [LICENSE](LICENSE). Bundled Microsoft runtime components retain their own licenses and notices in [licenses/](licenses/). The setup wizard is built with [Inno Setup](https://jrsoftware.org/isinfo.php); its copyright notices are retained.
+Copyright (C) 2026 Berke Akçen. Licensed under **GNU GPL v3.0 or later**; see [LICENSE](LICENSE). Bundled Microsoft runtime components retain their own licenses and notices in [licenses/](licenses/). The setup wizard is built with [Inno Setup](https://jrsoftware.org/isinfo.php); its copyright notices are retained.
 
 Euro Truck Simulator 2 is a product of SCS Software. This project is independent and is not affiliated with SCS Software.

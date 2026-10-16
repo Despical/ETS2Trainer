@@ -1,6 +1,6 @@
 /*
  * ETS2Trainer
- * Copyright (C) 2026 Despical
+ * Copyright (C) 2026 Berke Akçen
  * SPDX-License-Identifier: GPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify

@@ -1,6 +1,6 @@
 <!--
 ETS2Trainer
-Copyright (C) 2026 Despical
+Copyright (C) 2026 Berke Akçen
 SPDX-License-Identifier: GPL-3.0-or-later
 
 This program is free software: you can redistribute it and/or modify
@@ -30,7 +30,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     <Authors>Despical</Authors>
     <Product>ETS2Trainer</Product>
     <Description>A portable Euro Truck Simulator 2 trainer for Windows with an in-game overlay and English/Turkish support.</Description>
-    <Copyright>Copyright (C) 2026 Despical</Copyright>
+    <Copyright>Copyright (C) 2026 Berke Akçen</Copyright>
     <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/Despical/ETS2Trainer</RepositoryUrl>
     <RepositoryType>git</RepositoryType>

@@ -1,5 +1,5 @@
 @echo off
-rem Copyright (C) 2026 Despical
+rem Copyright (C) 2026 Berke Akçen
 rem SPDX-License-Identifier: GPL-3.0-or-later
 setlocal
 cd /d "%~dp0"
