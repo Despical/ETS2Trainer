@@ -29,17 +29,21 @@ public partial class MainWindow
 {
     private readonly DesktopPreferencesStore? _desktopStore;
     private readonly Action<string> _openSettingsDirectory;
+    private readonly IGameAutoStartService? _autoStartService;
+    private DesktopPreferences _desktopPreferences = new();
 
     private void InitializeDesktopPreferences()
     {
         SettingsDirectoryText.Text = DesktopPreferencesStore.DirectoryPath;
         SettingsDirectoryText.ToolTip = SettingsDirectoryText.Text;
+        AutoStartCheck.IsEnabled = false;
         if (_desktopStore is null) return;
         try
         {
-            var preferences = _desktopStore.Load();
-            Topmost = preferences.AlwaysOnTop;
-            AlwaysOnTopCheck.IsChecked = preferences.AlwaysOnTop;
+            _desktopPreferences = _desktopStore.Load();
+            Topmost = _desktopPreferences.AlwaysOnTop;
+            AlwaysOnTopCheck.IsChecked = _desktopPreferences.AlwaysOnTop;
+            AutoStartCheck.IsChecked = _desktopPreferences.AutoStartWithGame;
         }
         catch (Exception error) when (error is IOException or InvalidDataException or JsonException or UnauthorizedAccessException)
         {
@@ -52,13 +56,64 @@ public partial class MainWindow
         Topmost = AlwaysOnTopCheck.IsChecked == true;
         try
         {
-            _desktopStore?.Save(new(AlwaysOnTopCheck.IsChecked == true));
+            var updated = _desktopPreferences with { AlwaysOnTop = AlwaysOnTopCheck.IsChecked == true };
+            _desktopStore?.Save(updated);
+            _desktopPreferences = updated;
             SetOutcome("Pencere tercihi kaydedildi.", true);
         }
         catch (Exception error) when (error is IOException or UnauthorizedAccessException)
         {
             SetOutcome("Pencere tercihi uygulandı ancak kaydedilemedi.", false);
         }
+    }
+
+    private async Task InitializeAutoStartAsync()
+    {
+        if (_autoStartService is null || _desktopStore is null) return;
+        try { await _autoStartService.ApplyAsync(_desktopPreferences.AutoStartWithGame); }
+        catch (Exception error)
+        {
+            GameAutoStartService.RecordFailure(error);
+            SetOutcome("Otomatik başlatma hazırlanamadı; Ayarlar'dan kapatıp yeniden açmayı dene.", false);
+        }
+        finally { AutoStartCheck.IsEnabled = true; }
+    }
+
+    private async void AutoStart_Click(object sender, RoutedEventArgs e)
+    {
+        if (_autoStartService is null || _desktopStore is null) return;
+        var previous = _desktopPreferences.AutoStartWithGame;
+        var enabled = AutoStartCheck.IsChecked == true;
+        AutoStartCheck.IsEnabled = false;
+        var saved = false;
+        try
+        {
+            var updated = _desktopPreferences with { AutoStartWithGame = enabled };
+            _desktopStore.Save(updated);
+            _desktopPreferences = updated;
+            saved = true;
+            await _autoStartService.ApplyAsync(enabled);
+            SetOutcome(enabled ? "Otomatik başlatma açık; ETS2 açıldığında trainer başlatılacak."
+                : "Otomatik başlatma kapalı; arka plan izleyicisi durduruldu.", true);
+        }
+        catch (Exception error)
+        {
+            GameAutoStartService.RecordFailure(error);
+            if (saved)
+            {
+                try
+                {
+                    var restored = _desktopPreferences with { AutoStartWithGame = previous };
+                    _desktopStore.Save(restored);
+                    _desktopPreferences = restored;
+                    await _autoStartService.ApplyAsync(previous);
+                }
+                catch (Exception rollbackError) { GameAutoStartService.RecordFailure(rollbackError); }
+            }
+            AutoStartCheck.IsChecked = _desktopPreferences.AutoStartWithGame;
+            SetOutcome("Otomatik başlatma değiştirilemedi; ayar klasörünü ve Windows başlangıç izinlerini kontrol et.", false);
+        }
+        finally { AutoStartCheck.IsEnabled = true; }
     }
 
     private void OpenSettingsFolder_Click(object sender, RoutedEventArgs e)

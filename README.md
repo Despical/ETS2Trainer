@@ -30,7 +30,7 @@ The release includes the .NET runtime. No separate .NET installation, installer 
 | Profile | View and change money and total XP, and see the current level when supported by the game build. |
 | World | View the game clock, advance to a custom time, use day/night presets, and prevent driver fatigue. |
 | History | Review the latest 100 connection and action entries from the current session. |
-| Settings | Select the language, change the menu key, open the preferences folder and quit the trainer. |
+| Settings | Select the language, change the menu key, enable automatic startup with ETS2, open the preferences folder and quit the trainer. |
 
 Component repairs cover the engine, transmission, cabin, chassis, wheels and attached trailer. **Repair everything** also repairs cargo when the active loaded trailer can be verified. Existing damage is preserved when damage prevention is enabled; use a repair action to remove it.
 
@@ -43,6 +43,16 @@ Component repairs cover the engine, transmission, cabin, chassis, wheels and att
 
 The overlay follows the game window and display scaling. The menu key is registered while the game or its open menu is active. A key already registered by another application is rejected, and the previous binding is retained.
 
+## Start automatically with ETS2
+
+Enable **Settings → Automatic startup → Start the trainer when ETS2 launches**. The choice is saved immediately and the background watcher starts right away. It also starts when you next sign in to Windows, so you do not have to open the trainer first.
+
+The watcher checks for the game approximately every 1.5 seconds and opens one trainer window per game session. It does not attach to the game or enable protections itself. While ETS2 is closed, it stays hidden. If you quit the trainer while the game is still running, it stays closed until the next game launch. Starting the trainer manually remains available.
+
+Turn the same option off to stop the watcher and remove its startup registration. Automatic startup is off by default. It uses your current Windows user's startup entry, requires no administrator privileges and installs no service. Windows must allow the entry under **Settings → Apps → Startup**; if you disable it there, enable it again in Windows as well.
+
+Keep the extracted application folder in a permanent location. If you move it, open **ETS2Trainer.exe** from the new location once so the saved startup path can be updated.
+
 ## Languages and saved preferences
 
 The interface supports **Türkçe** and **English**. Select either language in **Settings → Language**; labels, descriptions, status messages and history update immediately. The initial language is Turkish.
@@ -51,6 +61,7 @@ These choices are remembered between launches:
 
 - Damage prevention, unlimited fuel and fatigue prevention.
 - Always on top for the desktop window.
+- Automatic startup when ETS2 launches.
 - Menu hotkey and interface language.
 
 Saved protections are applied automatically when the required game state is available. Closing the trainer restores the original damage coefficients while retaining your preference for the next launch.
@@ -65,10 +76,12 @@ Open **Settings → Settings files → Open settings folder** to access:
 | --- | --- |
 | `settings.json` | Menu hotkey. |
 | `protection.json` | Damage, fuel and fatigue preferences. |
-| `interface.json` | Always-on-top preference. |
+| `interface.json` | Always-on-top and automatic-startup preferences. |
 | `language.json` | Selected language. |
 
-To reset preferences, quit the trainer and remove the relevant file or this folder. A new launch uses the defaults.
+If automatic startup encounters a problem, `startup.log` in the same folder contains the latest error.
+
+To reset preferences, turn off automatic startup, quit the trainer and remove the relevant file or this folder. A new launch uses the defaults.
 
 ## Compatibility
 
@@ -79,14 +92,15 @@ To reset preferences, quit the trainer and remove the relevant file or this fold
 
 ## Update
 
-Quit the trainer through **Settings → Quit trainer**, extract the new release to the application folder and start it again. Preferences are stored separately in Local AppData and are retained when replacing the application files.
+If automatic startup is enabled, turn it off first to release the application file. Quit the trainer through **Settings → Quit trainer**, extract the new release to the application folder and start it again. Re-enable automatic startup if desired. Other preferences are stored separately in Local AppData and are retained when replacing the application files.
 
 ## Uninstall
 
-1. Quit the trainer through **Settings → Quit trainer**.
-2. Delete the folder where you extracted the application.
-3. To remove saved preferences, also delete `%LOCALAPPDATA%\ETS2Trainer`.
-4. If present, the application's extracted runtime cache under `%TEMP%\.net\ETS2Trainer` can also be removed after exit.
+1. Turn off **Settings → Automatic startup** to stop the background watcher and remove its Windows startup entry.
+2. Quit the trainer through **Settings → Quit trainer**.
+3. Delete the folder where you extracted the application.
+4. To remove saved preferences, also delete `%LOCALAPPDATA%\ETS2Trainer`.
+5. If present, the application's extracted runtime cache under `%TEMP%\.net\ETS2Trainer` can also be removed after exit.
 
 No game plugin or service needs to be uninstalled. Changes already saved into your ETS2 profile, such as money or XP, remain in the game save.
 
@@ -115,6 +129,7 @@ The GitHub Actions workflow builds and packages Windows x64 downloads for pushes
 - **The overlay minimizes the game:** switch ETS2 to borderless or windowed mode.
 - **The menu key is unavailable:** select another key in Settings. F12, Windows keys and modifier combinations are not accepted.
 - **A preference does not return after restart:** check the result message and that the settings folder is writable.
+- **Automatic startup does not run:** check the option in the trainer, the Windows Startup apps setting, and `startup.log` in the preferences folder. Open the trainer once after moving its folder.
 
 For problems or suggestions, use the [issue templates](https://github.com/Despical/ETS2Trainer/issues/new/choose). Include the trainer version, ETS2 version, display mode and steps to reproduce.
 

@@ -231,5 +231,15 @@
   "Dil, menü tuşu, pencere ve koruma tercihlerin bu klasörde saklanır.": "Your language, menu key, window and protection preferences are saved in this folder.",
   "Ayar klasörünü aç": "Open settings folder",
   "Ayar klasörü açıldı.": "Settings folder opened.",
-  "Ayar klasörü açılamadı: {0}": "Could not open the settings folder: {0}"
+  "Ayar klasörü açılamadı: {0}": "Could not open the settings folder: {0}",
+  "Dili, menü tuşunu ve otomatik başlatmayı ayarla. Tercihlerin sonraki açılışta hatırlanır.": "Choose your language, menu key and automatic startup. Your preferences are remembered for next time.",
+  "Otomatik başlatma": "Automatic startup",
+  "ETS2 açılınca trainer'ı başlat": "Start the trainer when ETS2 launches",
+  "Windows oturumun açıldığında küçük bir arka plan izleyicisi çalışır. ETS2 açılınca trainer otomatik başlar; oyun kapalıyken menü açılmaz.": "A small background watcher starts when you sign in to Windows. It opens the trainer when ETS2 launches, and stays hidden while the game is closed.",
+  "Aynı oyun oturumunda trainer'ı kapatırsan yeniden açılmaz. Bu seçeneği kapatmak izleyiciyi ve Windows başlangıç kaydını kaldırır.": "Quitting the trainer keeps it closed for the rest of that game session. Turning this option off stops the watcher and removes its Windows startup entry.",
+  "Otomatik başlatma hazırlanamadı; Ayarlar'dan kapatıp yeniden açmayı dene.": "Automatic startup could not be prepared; try turning it off and on again in Settings.",
+  "Otomatik başlatma açık; ETS2 açıldığında trainer başlatılacak.": "Automatic startup enabled; the trainer will start when ETS2 launches.",
+  "Otomatik başlatma kapalı; arka plan izleyicisi durduruldu.": "Automatic startup disabled; the background watcher has stopped.",
+  "Otomatik başlatma değiştirilemedi; ayar klasörünü ve Windows başlangıç izinlerini kontrol et.": "Automatic startup could not be changed; check the settings folder and Windows startup permissions.",
+  "Menüyü gizlemek korumaları çalışır tutar. Trainer'ı kapatmak korumaları durdurur; otomatik başlatma açıksa izleyici çalışmaya devam eder.": "Hiding the menu keeps protections running. Quitting the trainer stops protections; the watcher keeps running if automatic startup is enabled."
 }

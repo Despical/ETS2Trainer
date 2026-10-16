@@ -18,11 +18,13 @@
  */
 
 using System.IO;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 
 namespace ETS2Trainer.Core;
 
-public sealed record DesktopPreferences(bool AlwaysOnTop = false);
+public sealed record DesktopPreferences(bool AlwaysOnTop = false, bool AutoStartWithGame = false);
 
 public sealed class DesktopPreferencesStore(string? path = null)
 {
@@ -30,23 +32,45 @@ public sealed class DesktopPreferencesStore(string? path = null)
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ETS2Trainer");
     public string Path { get; } = path ?? System.IO.Path.Combine(DirectoryPath, "interface.json");
 
-    public DesktopPreferences Load()
+    public DesktopPreferences Load() => WithFileLock(Read);
+
+    public void Save(DesktopPreferences preferences) => WithFileLock(() =>
     {
-        if (!File.Exists(Path)) return new();
-        if (new FileInfo(Path).Length > 4096) throw new InvalidDataException("Interface settings file is too large.");
-        var settings = JsonSerializer.Deserialize<Settings>(File.ReadAllText(Path));
-        if (settings is not { Version: 1 }) throw new InvalidDataException("Invalid interface settings.");
-        return new(settings.AlwaysOnTop);
+        Write(preferences);
+        return true;
+    });
+
+    private T WithFileLock<T>(Func<T> action)
+    {
+        var identity = Encoding.UTF8.GetBytes(System.IO.Path.GetFullPath(Path).ToUpperInvariant());
+        var name = "ETS2Trainer.Interface." + Convert.ToHexString(SHA256.HashData(identity));
+        using var mutex = new Mutex(false, name);
+        bool acquired;
+        try { acquired = mutex.WaitOne(TimeSpan.FromSeconds(3)); }
+        catch (AbandonedMutexException) { acquired = true; }
+        if (!acquired) throw new IOException("Interface preferences are busy; try again.");
+        try { return action(); }
+        finally { mutex.ReleaseMutex(); }
     }
 
-    public void Save(DesktopPreferences preferences)
+    private DesktopPreferences Read()
+    {
+        if (!File.Exists(Path)) return new();
+        using var stream = new FileStream(Path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+        if (stream.Length > 4096) throw new InvalidDataException("Interface settings file is too large.");
+        var settings = JsonSerializer.Deserialize<Settings>(stream);
+        if (settings is not { Version: 1 }) throw new InvalidDataException("Invalid interface settings.");
+        return new(settings.AlwaysOnTop, settings.AutoStartWithGame);
+    }
+
+    private void Write(DesktopPreferences preferences)
     {
         var destination = System.IO.Path.GetFullPath(Path);
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(destination)!);
         var temporary = destination + "." + Guid.NewGuid().ToString("N") + ".tmp";
         try
         {
-            var bytes = JsonSerializer.SerializeToUtf8Bytes(new Settings(1, preferences.AlwaysOnTop),
+            var bytes = JsonSerializer.SerializeToUtf8Bytes(new Settings(1, preferences.AlwaysOnTop, preferences.AutoStartWithGame),
                 new JsonSerializerOptions { WriteIndented = true });
             using (var stream = new FileStream(temporary, FileMode.CreateNew, FileAccess.Write, FileShare.None, 4096, FileOptions.WriteThrough))
             {
@@ -58,5 +82,5 @@ public sealed class DesktopPreferencesStore(string? path = null)
         finally { if (File.Exists(temporary)) File.Delete(temporary); }
     }
 
-    private sealed record Settings(int Version, bool AlwaysOnTop = false);
+    private sealed record Settings(int Version, bool AlwaysOnTop = false, bool AutoStartWithGame = false);
 }

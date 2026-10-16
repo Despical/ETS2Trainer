@@ -47,11 +47,13 @@ public partial class MainWindow : Window
     private string _lastRefreshError = "";
 
     public MainWindow(ITrainerBackend backend, LanguagePreferencesStore? languageStore = null,
-        DesktopPreferencesStore? desktopStore = null, Action<string>? openSettingsDirectory = null)
+        DesktopPreferencesStore? desktopStore = null, Action<string>? openSettingsDirectory = null,
+        IGameAutoStartService? autoStartService = null)
     {
         _backend = backend;
         _languageStore = languageStore;
         _desktopStore = desktopStore;
+        _autoStartService = autoStartService;
         _openSettingsDirectory = openSettingsDirectory ?? OpenShellDirectory;
         string? languageWarning = null;
         if (languageStore is not null)
@@ -109,6 +111,7 @@ public partial class MainWindow : Window
         await RefreshAsync();
         if (!_closed)
             _refreshTimer.Start();
+        await InitializeAutoStartAsync();
     }
 
     private async Task RefreshAsync()

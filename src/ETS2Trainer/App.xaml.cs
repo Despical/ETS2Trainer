@@ -26,12 +26,31 @@ public partial class App : Application
 {
     private ITrainerBackend? _backend;
     private OverlayController? _overlay;
+    private TrainerInstance? _instance;
 
-    protected override void OnStartup(StartupEventArgs e)
+    protected override async void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+        var watchMode = e.Args.Contains(GameAutoStartService.WatchArgument, StringComparer.Ordinal);
+        _instance = TrainerInstance.TryAcquire(watchMode ? "Watcher" : "Desktop");
+        if (_instance is null)
+        {
+            Shutdown();
+            return;
+        }
+        var desktopStore = new DesktopPreferencesStore();
+        var autoStart = new GameAutoStartService();
+        if (watchMode)
+        {
+            ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            try { await autoStart.WatchAsync(desktopStore); }
+            catch (Exception error) { GameAutoStartService.RecordFailure(error); }
+            finally { Shutdown(); }
+            return;
+        }
         _backend = new SavedProtectionBackend(new TrainerBackend(), new ProtectionPreferencesStore());
-        var window = new MainWindow(_backend, new Localization.LanguagePreferencesStore(), new DesktopPreferencesStore());
+        var window = new MainWindow(_backend, new Localization.LanguagePreferencesStore(), desktopStore,
+            autoStartService: autoStart);
         MainWindow = window;
         window.Show();
         _overlay = new OverlayController(window);
@@ -41,6 +60,7 @@ public partial class App : Application
     {
         _overlay?.Dispose();
         _backend?.Dispose();
+        _instance?.Dispose();
         base.OnExit(e);
     }
 }

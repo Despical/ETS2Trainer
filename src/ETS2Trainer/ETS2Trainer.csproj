@@ -26,7 +26,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
     <PlatformTarget>x64</PlatformTarget>
     <AssemblyName>ETS2Trainer</AssemblyName>
     <RootNamespace>ETS2Trainer</RootNamespace>
-    <Version>0.5.1</Version>
+    <Version>0.6.0</Version>
     <Authors>Despical</Authors>
     <Product>ETS2Trainer</Product>
     <Description>A portable Euro Truck Simulator 2 trainer for Windows with an in-game overlay and English/Turkish support.</Description>
