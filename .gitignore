@@ -17,9 +17,14 @@
 !/licenses/**
 !/src/
 !/src/**
+!/installer/
+/installer/*
+!/installer/ETS2Trainer.iss
+!/installer/build.ps1
 !/docs/
 /docs/*
 !/docs/screenshots/
+/docs/screenshots/*
 !/docs/screenshots/*.png
 !/docs/screenshots/*.png.license
 

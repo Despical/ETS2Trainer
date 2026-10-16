@@ -37,6 +37,9 @@ jobs:
       - name: Publish portable application
         run: ./build.ps1 -OutputDirectory ./artifacts/publish
 
+      - name: Build Windows setup
+        run: ./installer/build.ps1 -PublishDirectory ./artifacts/publish -OutputDirectory ./artifacts
+
       - name: Package release files
         run: |
           $version = ([xml](Get-Content ./src/ETS2Trainer/ETS2Trainer.csproj)).Project.PropertyGroup.Version
@@ -48,15 +51,19 @@ jobs:
           $name = "ETS2Trainer-$version-win-x64.zip"
           $archive = Join-Path (Resolve-Path ./artifacts).Path $name
           Compress-Archive -LiteralPath (Get-ChildItem -LiteralPath $package.FullName).FullName -DestinationPath $archive -CompressionLevel Optimal
-          $hash = (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant()
-          "$hash  $name" | Set-Content ./artifacts/SHA256SUMS.txt -Encoding utf8NoBOM
+          $checksums = foreach ($file in @($name, "ETS2Trainer-$version-Setup-x64.exe")) {
+              $hash = (Get-FileHash -LiteralPath (Join-Path ./artifacts $file) -Algorithm SHA256).Hash.ToLowerInvariant()
+              "$hash  $file"
+          }
+          $checksums | Set-Content ./artifacts/SHA256SUMS.txt -Encoding utf8NoBOM
 
-      - name: Upload portable package
+      - name: Upload Windows packages
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: ETS2Trainer-win-x64
           path: |
             artifacts/ETS2Trainer-*-win-x64.zip
+            artifacts/ETS2Trainer-*-Setup-x64.exe
             artifacts/SHA256SUMS.txt
           if-no-files-found: error
           retention-days: 14

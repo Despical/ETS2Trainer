@@ -33,7 +33,7 @@ public sealed class GameAutoStartService : IGameAutoStartService
 {
     public const string WatchArgument = "--watch-game";
     public const string StartupValueName = "ETS2Trainer.GameWatcher";
-    private const string RunKey = @"Software\Microsoft\Windows\CurrentVersion\Run";
+    internal const string RunKey = @"Software\Microsoft\Windows\CurrentVersion\Run";
     private readonly string _executablePath;
 
     public GameAutoStartService(string? executablePath = null)
@@ -44,7 +44,11 @@ public sealed class GameAutoStartService : IGameAutoStartService
             throw new IOException("The trainer path cannot be used for automatic startup.");
     }
 
-    public async Task ApplyAsync(bool enabled)
+    public Task ApplyAsync(bool enabled) => ConfigureAsync(enabled, startWatcher: true);
+
+    internal string StartupCommand => $"\"{_executablePath}\" {WatchArgument}";
+
+    internal async Task ConfigureAsync(bool enabled, bool startWatcher)
     {
         if (!enabled)
         {
@@ -54,7 +58,7 @@ public sealed class GameAutoStartService : IGameAutoStartService
             return;
         }
 
-        var command = $"\"{_executablePath}\" {WatchArgument}";
+        var command = StartupCommand;
         using (var key = Registry.CurrentUser.CreateSubKey(RunKey, writable: true))
         {
             if (!string.Equals(key.GetValue(StartupValueName) as string, command, StringComparison.Ordinal))
@@ -64,7 +68,7 @@ public sealed class GameAutoStartService : IGameAutoStartService
             }
         }
 
-        if (TrainerInstance.IsRunning("Watcher")) return;
+        if (!startWatcher || TrainerInstance.IsRunning("Watcher")) return;
         using var process = Start(WatchArgument, hidden: true);
         var ready = await Task.Run(async () =>
         {
@@ -80,7 +84,7 @@ public sealed class GameAutoStartService : IGameAutoStartService
         if (!ready) throw new IOException("The automatic startup watcher could not start.");
     }
 
-    private static async Task StopWatcherAsync()
+    internal static async Task StopWatcherAsync()
     {
         try
         {

@@ -28,10 +28,23 @@ public partial class App : Application
     private OverlayController? _overlay;
     private TrainerInstance? _instance;
     private GameSessionController? _gameSession;
+    private TrainerLifetimeControl? _lifetime;
 
     protected override async void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+        if (InstallerCommands.IsCommand(e.Args))
+        {
+            ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            Shutdown(await InstallerCommands.RunAsync(e.Args));
+            return;
+        }
+        var afterSetup = e.Args.Contains("--after-setup", StringComparer.Ordinal);
+        if (afterSetup ? !await InstallerCommands.WaitForSetupAsync() : InstallerCommands.IsSetupRunning())
+        {
+            Shutdown(1);
+            return;
+        }
         var watchMode = e.Args.Contains(GameAutoStartService.WatchArgument, StringComparer.Ordinal);
         _instance = TrainerInstance.TryAcquire(watchMode ? "Watcher" : "Desktop");
         if (_instance is null)
@@ -56,10 +69,12 @@ public partial class App : Application
         window.Show();
         _overlay = new OverlayController(window);
         _gameSession = new GameSessionController(window);
+        _lifetime = new TrainerLifetimeControl(window);
     }
 
     protected override void OnExit(ExitEventArgs e)
     {
+        _lifetime?.Dispose();
         _gameSession?.Dispose();
         _overlay?.Dispose();
         _backend?.Dispose();

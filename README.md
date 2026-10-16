@@ -7,7 +7,7 @@
 
 <p align="center">
   <a href="https://github.com/Despical/ETS2Trainer/actions/workflows/build.yml"><img src="https://github.com/Despical/ETS2Trainer/actions/workflows/build.yml/badge.svg" alt="Build"></a>
-  <a href="https://github.com/Despical/ETS2Trainer/releases/latest"><img src="https://img.shields.io/badge/release-v0.7.0-blue" alt="Latest release: v0.7.0"></a>
+  <a href="https://github.com/Despical/ETS2Trainer/releases/latest"><img src="https://img.shields.io/badge/release-v0.8.0-blue" alt="Latest release: v0.8.0"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPLv3-blue" alt="GPLv3 license"></a>
   <img src="https://img.shields.io/badge/platform-Windows%20x64-0078D4" alt="Windows x64">
   <img src="https://img.shields.io/badge/languages-English%20%2F%20T%C3%BCrk%C3%A7e-F3B65A" alt="English and Turkish">
@@ -22,13 +22,25 @@
 
 ## Download and install
 
+### Setup — recommended
+
+1. Open the [latest release](https://github.com/Despical/ETS2Trainer/releases/latest) and download **ETS2Trainer-...-Setup-x64.exe**.
+2. Choose English or Turkish for the setup wizard, then select the installation folder. The default is `%LOCALAPPDATA%\Programs\ETS2Trainer` for your Windows account.
+3. Choose whether to create a **desktop shortcut** and **start the trainer automatically when ETS2 launches**. Existing startup preferences are preselected when updating.
+4. Finish Setup. Open the trainer from the desktop shortcut or Start menu, or let it start the next time you launch ETS2 if you selected automatic startup.
+5. Start ETS2 normally, load your profile and enter driving mode.
+
+Setup includes the .NET runtime, creates a Start menu entry and registers an uninstaller under **Windows Settings → Apps → Installed apps → ETS2Trainer**. It does not request administrator privileges; choose a folder your account can write to. Automatic startup can be changed later in the trainer's Settings.
+
+### Portable ZIP
+
 1. Open the [latest release](https://github.com/Despical/ETS2Trainer/releases/latest).
 2. Download the **ETS2Trainer-...-win-x64.zip** asset and extract the complete archive to a folder of your choice.
 3. Run **ETS2Trainer.exe** or **Start Trainer.cmd**.
 4. Start ETS2, load your profile and enter driving mode. The connection status updates automatically.
 5. Optional: in **Settings → Automatic startup & shutdown**, enable **Start the trainer when ETS2 launches**, **Close the trainer when ETS2 exits**, or both. Each choice is saved immediately.
 
-The release includes the .NET runtime. No separate .NET installation, installer or game plugin is required. SHA-256 checksums are included with each release.
+Both downloads include the .NET runtime. No separate .NET installation or game plugin is required. SHA-256 checksums for Setup and the portable ZIP are included with each release.
 
 ## Features
 
@@ -127,9 +139,17 @@ To reset preferences, turn off automatic startup, quit the trainer and remove th
 
 ## Update
 
-If automatic startup is enabled, turn it off first to release the application file. Quit the trainer through **Settings → Quit trainer**, extract the new release to the application folder and start it again. Re-enable automatic startup if desired. Other preferences are stored separately in Local AppData and are retained when replacing the application files.
+**Setup installation:** run the newer Setup EXE. It closes the trainer and watcher normally, updates the application and preserves your saved preferences. Review the shortcut and automatic-startup options before installing. If an older portable overlay cannot be closed automatically, quit it through **Settings → Quit trainer** and retry Setup.
+
+**Portable installation:** if automatic startup is enabled, turn it off first to release the application file. Quit through **Settings → Quit trainer**, extract the new ZIP to the application folder and start it again. Re-enable automatic startup if desired. Other preferences are stored separately in Local AppData and are retained when replacing the application files.
+
+To move from portable to Setup, run Setup and use its new shortcut or Start menu entry afterward. Your existing preferences are reused. Once the new installation works, the old portable folder can be removed.
 
 ## Uninstall
+
+**Setup installation:** open **Windows Settings → Apps → Installed apps → ETS2Trainer → Uninstall**, or run `unins000.exe` in the installation folder. The uninstaller closes the trainer and watcher normally, removes its startup entry and shortcuts, and deletes the installed application files. Saved preferences are retained; automatic startup is switched off. Unrelated files you added to the installation folder are retained.
+
+**Portable installation:**
 
 1. Turn off **Settings → Automatic startup & shutdown → Start the trainer when ETS2 launches** to stop the background watcher and remove its Windows startup entry.
 2. Quit the trainer through **Settings → Quit trainer**.
@@ -137,7 +157,7 @@ If automatic startup is enabled, turn it off first to release the application fi
 4. To remove saved preferences, also delete `%LOCALAPPDATA%\ETS2Trainer`.
 5. If present, the application's extracted runtime cache under `%TEMP%\.net\ETS2Trainer` can also be removed after exit.
 
-No game plugin or service needs to be uninstalled. Changes already saved into your ETS2 profile, such as money or XP, remain in the game save.
+For either edition, delete `%LOCALAPPDATA%\ETS2Trainer` separately if you also want to remove saved preferences. No game plugin or service needs to be uninstalled. Changes already saved into your ETS2 profile, such as money or XP, remain in the game save.
 
 ## Build from source
 
@@ -155,7 +175,15 @@ The portable output is written to `dist/`. To choose another output folder:
 ./build.ps1 -OutputDirectory ./artifacts/publish
 ```
 
-The GitHub Actions workflow builds and packages Windows x64 downloads for pushes and pull requests. Its package is available in the workflow run's artifacts.
+Build the setup wizard from the published folder:
+
+```powershell
+./installer/build.ps1 -PublishDirectory ./artifacts/publish -OutputDirectory ./artifacts
+```
+
+The installer build downloads the pinned official **Inno Setup 7.1.0** compiler, verifies its SHA-256 and publisher signature, and extracts it in portable mode under `artifacts/build-tools/`. To use an existing compiler, pass `-CompilerPath` with the path to `ISCC.exe`.
+
+The GitHub Actions workflow builds both Windows x64 downloads and generates their SHA-256 checksums for pushes and pull requests. The files are available in the workflow run's artifacts.
 
 ## Troubleshooting
 
@@ -176,6 +204,6 @@ If you would like to support development: [GitHub Sponsors](https://github.com/s
 
 ## License
 
-Copyright (C) 2026 Despical. Licensed under **GNU GPL v3.0 or later**; see [LICENSE](LICENSE). Bundled Microsoft runtime components retain their own licenses and notices in [licenses/](licenses/).
+Copyright (C) 2026 Despical. Licensed under **GNU GPL v3.0 or later**; see [LICENSE](LICENSE). Bundled Microsoft runtime components retain their own licenses and notices in [licenses/](licenses/). The setup wizard is built with [Inno Setup](https://jrsoftware.org/isinfo.php); its copyright notices are retained.
 
 Euro Truck Simulator 2 is a product of SCS Software. This project is independent and is not affiliated with SCS Software.
