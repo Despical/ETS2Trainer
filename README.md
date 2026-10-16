@@ -7,7 +7,7 @@
 
 <p align="center">
   <a href="https://github.com/Despical/ETS2Trainer/actions/workflows/build.yml"><img src="https://github.com/Despical/ETS2Trainer/actions/workflows/build.yml/badge.svg" alt="Build"></a>
-  <a href="https://github.com/Despical/ETS2Trainer/releases/latest"><img src="https://img.shields.io/badge/release-v0.8.0-blue" alt="Latest release: v0.8.0"></a>
+  <a href="https://github.com/Despical/ETS2Trainer/releases/latest"><img src="https://img.shields.io/badge/release-v0.9.0-blue" alt="Latest release: v0.9.0"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPLv3-blue" alt="GPLv3 license"></a>
   <img src="https://img.shields.io/badge/platform-Windows%20x64-0078D4" alt="Windows x64">
   <img src="https://img.shields.io/badge/languages-English%20%2F%20T%C3%BCrk%C3%A7e-F3B65A" alt="English and Turkish">
@@ -50,9 +50,14 @@ Both downloads include the .NET runtime. No separate .NET installation or game p
 | Profile | View and change money and total XP, and see the current level when supported by the game build. |
 | World | View the game clock, advance to a custom time, use day/night presets, and prevent driver fatigue. |
 | History | Review the latest 100 connection and action entries from the current session. |
+| Debug | Enable developer mode, the console and free camera; select a profile and capture a new free camera key. |
 | Settings | Select the language, change the menu key, choose automatic startup and shutdown with ETS2, open the preferences folder and quit the trainer. |
 
 Component repairs cover the engine, transmission, cabin, chassis, wheels and attached trailer. **Repair everything** also repairs cargo when the active loaded trailer can be verified. Existing damage is preserved when damage prevention is enabled; use a repair action to remove it.
+
+The **Debug** page reads ETS2's user folder under Documents; use **Choose folder** for a custom location. Developer mode and console settings apply globally. Select the intended local or Steam profile to change its free camera binding. Click the camera key button and press one key; Esc cancels. Keys already used by another game control or the trainer menu are rejected. The default camera key is the top-row **0**.
+
+Close ETS2 completely before saving debug settings, then start it again. The page displays this restart requirement and disables saving while ETS2 is running, since the game can overwrite configuration files on exit. If automatic shutdown closes the trainer too, reopen the trainer manually to save. Changed files receive timestamped `.ets2trainer-*.bak` backups beside the originals. No savegame is edited. See SCS's [console documentation](https://modding.scssoft.com/wiki/Documentation/Engine/Console) and [input configuration documentation](https://modding.scssoft.com/wiki/Documentation/Engine/Advanced_input_configuration).
 
 ## Screenshots
 

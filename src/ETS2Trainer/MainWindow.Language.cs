@@ -51,6 +51,7 @@ public partial class MainWindow
     {
         if (!_languageReady || sender is not RadioButton { Tag: string language } || L.Language == language) return;
         CancelMenuHotkeyCapture();
+        CancelCameraKeyCapture();
         L.SetLanguage(language);
         try
         {
@@ -77,6 +78,7 @@ public partial class MainWindow
         UpdateLastRead();
         SetMenuHotkey(_menuHotkey);
         UpdateCaptionLanguage();
+        UpdateDebugAvailability();
     }
 
     private void UpdateCaptionLanguage()

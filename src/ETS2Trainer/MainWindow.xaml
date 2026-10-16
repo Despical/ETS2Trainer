@@ -117,6 +117,31 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
                 </StackPanel></ScrollViewer>
             </TabItem>
 
+            <TabItem x:Name="DebugTab">
+                <TabItem.Header><StackPanel><TextBlock Text="Debug" FontSize="16" FontWeight="SemiBold" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}"/><TextBlock Text="{ui:Loc &quot;Konsol ve kamera&quot;}" Style="{StaticResource MutedText}" FontSize="12" Margin="0,3,0,0"/></StackPanel></TabItem.Header>
+                <ScrollViewer x:Name="DebugScroll" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Padding="0,0,7,14"><StackPanel>
+                    <TextBlock Text="{ui:Loc &quot;Debug ayarları&quot;}" Style="{StaticResource PageTitle}"/><TextBlock Text="{ui:Loc &quot;Geliştirici konsolunu ve serbest kamerayı aç; kamera tuşunu seçtiğin profil için değiştir.&quot;}" Style="{StaticResource PageDescription}"/><Border Style="{StaticResource PageSeparator}"/>
+                    <Border Style="{StaticResource Card}" BorderBrush="#80633B" Margin="0,0,0,14" Padding="14"><StackPanel><TextBlock Text="{ui:Loc &quot;Oyunu yeniden başlatmak gerekir&quot;}" FontSize="15" FontWeight="SemiBold" Foreground="{StaticResource AccentBrush}"/><TextBlock x:Name="DebugRestartText" Style="{StaticResource PageDescription}"/><TextBlock Text="{ui:Loc &quot;Trainer oyunla birlikte kapanırsa trainer'ı elle açıp ayarları kaydet.&quot;}" Style="{StaticResource MutedText}" FontSize="12" Margin="0,6,0,0"/></StackPanel></Border>
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,14"><StackPanel>
+                        <Grid Margin="0,0,0,10"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="{ui:Loc &quot;ETS2 kullanıcı klasörü&quot;}" FontWeight="SemiBold" VerticalAlignment="Center"/><Button Grid.Column="1" Content="{ui:Loc &quot;Klasör seç&quot;}" Click="ChooseGameDirectory_Click" Padding="12,6"/></Grid>
+                        <TextBlock x:Name="DebugDirectoryText" Style="{StaticResource MutedText}" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" Margin="0,0,0,12"/>
+                        <TextBlock Text="{ui:Loc &quot;Kamera tuşunun değişeceği profil&quot;}" Style="{StaticResource MutedText}" Margin="0,0,0,6"/>
+                        <ComboBox x:Name="DebugProfileCombo" DisplayMemberPath="Name" SelectionChanged="DebugProfile_SelectionChanged" AutomationProperties.Name="{ui:Loc &quot;Kamera tuşunun değişeceği profil&quot;}"/>
+                    </StackPanel></Border>
+                    <Border x:Name="DebugOptionsCard" Style="{StaticResource Card}" Margin="0,0,0,14"><StackPanel>
+                        <CheckBox x:Name="DeveloperModeCheck" Content="{ui:Loc &quot;Geliştirici modu (debug)&quot;}" Click="DebugOption_Click"/><TextBlock Text="{ui:Loc &quot;Konsol ve serbest kamera için gereklidir. Tüm profillerde geçerlidir.&quot;}" Style="{StaticResource MutedText}" FontSize="12" Margin="0,7,0,0"/>
+                        <Border Style="{StaticResource PageSeparator}" Margin="0,14"/>
+                        <CheckBox x:Name="DeveloperConsoleCheck" Content="{ui:Loc &quot;Konsolu etkinleştir&quot;}" Click="DebugOption_Click"/><TextBlock Text="{ui:Loc &quot;Oyunda konsolu açmak için Esc altındaki konsol tuşunu (~ / `) kullan.&quot;}" Style="{StaticResource MutedText}" FontSize="12" Margin="0,7,0,0"/>
+                        <Border Style="{StaticResource PageSeparator}" Margin="0,14"/>
+                        <CheckBox x:Name="FreeCameraCheck" Content="{ui:Loc &quot;Serbest kamerayı etkinleştir&quot;}" Click="DebugOption_Click"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,12,0,0"><Button x:Name="CaptureCameraKeyButton" Width="170" Height="42" Content="0" Click="CaptureCameraKey_Click" AutomationProperties.Name="{ui:Loc &quot;Serbest kamera tuşunu değiştir&quot;}"/><Button x:Name="ResetCameraKeyButton" Content="{ui:Loc &quot;Varsayılan: 0&quot;}" Click="ResetCameraKey_Click" Margin="10,0,0,0"/></StackPanel>
+                        <TextBlock x:Name="CameraKeyInstructionText" Style="{StaticResource PageDescription}" Margin="0,10,0,0"/>
+                        <TextBlock Text="{ui:Loc &quot;Serbest kamerada yönü fareyle, hareketi sayısal tuş takımıyla kontrol et. Kabine dönmek için 1'e bas.&quot;}" Style="{StaticResource MutedText}" FontSize="12" Margin="0,8,0,0"/>
+                    </StackPanel></Border>
+                    <StackPanel Orientation="Horizontal"><Button x:Name="SaveDebugButton" Style="{StaticResource PrimaryButton}" Click="SaveDebug_Click"><TextBlock Text="{ui:Loc &quot;Debug ayarlarını kaydet&quot;}" Foreground="#181B20"/></Button><Button x:Name="ReloadDebugButton" Content="{ui:Loc &quot;Yeniden oku&quot;}" Click="ReloadDebug_Click" Margin="10,0,0,0"/></StackPanel>
+                    <TextBlock x:Name="DebugStatusText" Style="{StaticResource PageDescription}" Margin="0,12,0,0"/>
+                </StackPanel></ScrollViewer>
+            </TabItem>
             <TabItem x:Name="HistoryTab">
                 <TabItem.Header><StackPanel><TextBlock Text="{ui:Loc &quot;Geçmiş&quot;}" FontSize="16" FontWeight="SemiBold" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TabItem}}"/><TextBlock Text="{ui:Loc &quot;İşlemler ve bağlantı&quot;}" Style="{StaticResource MutedText}" FontSize="12" Margin="0,3,0,0"/></StackPanel></TabItem.Header>
                 <Grid Margin="0,0,7,14"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition/></Grid.RowDefinitions><StackPanel><TextBlock Text="{ui:Loc &quot;İşlem geçmişi&quot;}" Style="{StaticResource PageTitle}"/><TextBlock Text="{ui:Loc &quot;Bağlantı değişikliklerini ve uyguladığın işlemleri incele. Bu oturumun son 100 kaydı tutulur.&quot;}" Style="{StaticResource PageDescription}"/><Border Style="{StaticResource PageSeparator}"/></StackPanel>

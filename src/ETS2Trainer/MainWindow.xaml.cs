@@ -48,7 +48,8 @@ public partial class MainWindow : Window
 
     public MainWindow(ITrainerBackend backend, LanguagePreferencesStore? languageStore = null,
         DesktopPreferencesStore? desktopStore = null, Action<string>? openSettingsDirectory = null,
-        IGameAutoStartService? autoStartService = null)
+        IGameAutoStartService? autoStartService = null, GameDebugSettingsService? debugSettings = null,
+        string? gameDirectory = null)
     {
         _backend = backend;
         _languageStore = languageStore;
@@ -66,6 +67,8 @@ public partial class MainWindow : Window
             }
         }
         InitializeComponent();
+        _debugSettings = debugSettings ?? new GameDebugSettingsService();
+        _gameDirectory = gameDirectory ?? GameDebugSettingsService.DefaultDirectory;
         InitializeOverlayPresentation();
         ActivityList.ItemsSource = _activity;
         _featureControls = new()
@@ -101,6 +104,7 @@ public partial class MainWindow : Window
 
         InitializeLanguagePresentation();
         InitializeDesktopPreferences();
+        InitializeDebugSettings();
         ApplySnapshot(_snapshot);
         AddActivity("Kontrol paneli hazır. ETS2 bağlantısı bekleniyor.");
         if (languageWarning is not null) AddActivity(languageWarning);
@@ -179,6 +183,7 @@ public partial class MainWindow : Window
         NoDamageCheck.IsChecked = snapshot.NoDamage;
         InfiniteFuelCheck.IsChecked = snapshot.InfiniteFuel;
         NoFatigueCheck.IsChecked = snapshot.NoFatigue;
+        UpdateDebugAvailability();
         UpdateAvailability();
 
         var connectionStatus = $"{snapshot.Connected}|{snapshot.Status}|{snapshot.ProcessId}|{snapshot.Version}";

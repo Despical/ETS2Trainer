@@ -107,6 +107,7 @@ public partial class MainWindow
     {
         Dispatcher.VerifyAccess();
         CancelMenuHotkeyCapture();
+        CancelCameraKeyCapture();
         if (!IsOverlayMode || _desktopPresentation is not { } desktop)
             return;
 
@@ -184,6 +185,8 @@ public partial class MainWindow
         SetMenuHotkey(MenuHotkey.Default);
         PreviewKeyDown += (_, e) =>
         {
+            if (TryHandleCameraKeyDown(e))
+                return;
             if (TryHandleMenuHotkeyCaptureKeyDown(e))
                 return;
             if (IsOverlayMode && e.Key == Key.Escape)
@@ -193,11 +196,14 @@ public partial class MainWindow
             }
         };
         PreviewKeyUp += MenuHotkeyCaptureKeyUp;
-        Deactivated += (_, _) => CancelMenuHotkeyCapture();
+        PreviewKeyUp += CameraKeyUp;
+        Deactivated += (_, _) => { CancelMenuHotkeyCapture(); CancelCameraKeyCapture(); };
         MainTabs.SelectionChanged += (_, e) =>
         {
             if (ReferenceEquals(e.Source, MainTabs) && !ReferenceEquals(MainTabs.SelectedItem, SettingsTab))
                 CancelMenuHotkeyCapture();
+            if (ReferenceEquals(e.Source, MainTabs) && !ReferenceEquals(MainTabs.SelectedItem, DebugTab))
+                CancelCameraKeyCapture();
         };
         Closing += Overlay_WindowClosing;
     }
@@ -205,6 +211,7 @@ public partial class MainWindow
     private void Overlay_WindowClosing(object? sender, CancelEventArgs e)
     {
         CancelMenuHotkeyCapture();
+        CancelCameraKeyCapture();
         if (!IsOverlayMode)
             return;
         e.Cancel = true;
