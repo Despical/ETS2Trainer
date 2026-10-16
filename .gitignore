@@ -17,6 +17,11 @@
 !/licenses/**
 !/src/
 !/src/**
+!/docs/
+/docs/*
+!/docs/screenshots/
+!/docs/screenshots/*.png
+!/docs/screenshots/*.png.license
 
 # Generated files and local settings.
 **/bin/

@@ -27,6 +27,7 @@ public partial class App : Application
     private ITrainerBackend? _backend;
     private OverlayController? _overlay;
     private TrainerInstance? _instance;
+    private GameSessionController? _gameSession;
 
     protected override async void OnStartup(StartupEventArgs e)
     {
@@ -54,10 +55,12 @@ public partial class App : Application
         MainWindow = window;
         window.Show();
         _overlay = new OverlayController(window);
+        _gameSession = new GameSessionController(window);
     }
 
     protected override void OnExit(ExitEventArgs e)
     {
+        _gameSession?.Dispose();
         _overlay?.Dispose();
         _backend?.Dispose();
         _instance?.Dispose();

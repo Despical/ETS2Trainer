@@ -138,11 +138,13 @@ public sealed class GameAutoStartService : IGameAutoStartService
         WindowStyle = hidden ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal
     }) ?? throw new IOException("Unable to start the trainer process.");
 
-    private static List<GameProcessIdentity>? ReadGameProcesses()
+    internal static List<GameProcessIdentity>? ReadGameProcesses()
     {
         var games = new List<GameProcessIdentity>();
         var complete = true;
-        var processes = Process.GetProcessesByName("eurotrucks2");
+        Process[] processes;
+        try { processes = Process.GetProcessesByName("eurotrucks2"); }
+        catch (Exception error) when (error is Win32Exception or InvalidOperationException) { return null; }
         foreach (var process in processes)
         {
             using (process)

@@ -241,5 +241,13 @@
   "Otomatik başlatma açık; ETS2 açıldığında trainer başlatılacak.": "Automatic startup enabled; the trainer will start when ETS2 launches.",
   "Otomatik başlatma kapalı; arka plan izleyicisi durduruldu.": "Automatic startup disabled; the background watcher has stopped.",
   "Otomatik başlatma değiştirilemedi; ayar klasörünü ve Windows başlangıç izinlerini kontrol et.": "Automatic startup could not be changed; check the settings folder and Windows startup permissions.",
-  "Menüyü gizlemek korumaları çalışır tutar. Trainer'ı kapatmak korumaları durdurur; otomatik başlatma açıksa izleyici çalışmaya devam eder.": "Hiding the menu keeps protections running. Quitting the trainer stops protections; the watcher keeps running if automatic startup is enabled."
+  "Menüyü gizlemek korumaları çalışır tutar. Trainer'ı kapatmak korumaları durdurur; otomatik başlatma açıksa izleyici çalışmaya devam eder.": "Hiding the menu keeps protections running. Quitting the trainer stops protections; the watcher keeps running if automatic startup is enabled.",
+  "Dili, menü tuşunu ve oyunla birlikte açılma/kapanma tercihlerini ayarla. Değişiklikler kaydedilir.": "Choose your language, menu key and startup/shutdown preferences. Changes are saved for next time.",
+  "Otomatik başlatma ve kapatma": "Automatic startup & shutdown",
+  "ETS2 kapanınca trainer'ı kapat": "Close the trainer when ETS2 exits",
+  "Oyun tamamen kapandığında trainer normal şekilde çıkar. Ana menüye dönmek veya profil değiştirmek trainer'ı kapatmaz.": "The trainer exits normally when the game closes completely. Returning to the main menu or switching profiles keeps it open.",
+  "İki seçenek ayrı kaydedilir. Oyun kapalıyken trainer'ı elle açabilirsin. Otomatik başlatmayı kapatmak arka plan izleyicisini ve Windows başlangıç kaydını kaldırır.": "Both choices are saved independently. You can open the trainer manually while the game is closed. Turning off automatic startup removes the watcher and its Windows startup entry.",
+  "Otomatik kapatma açık; ETS2 kapandığında trainer kapanacak.": "Automatic shutdown enabled; the trainer will close when ETS2 exits.",
+  "Otomatik kapatma kapalı; trainer oyun kapandıktan sonra açık kalacak.": "Automatic shutdown disabled; the trainer will stay open after the game exits.",
+  "Otomatik kapatma kaydedilemedi; önceki tercih korunuyor.": "Automatic shutdown could not be saved; the previous choice is retained."
 }

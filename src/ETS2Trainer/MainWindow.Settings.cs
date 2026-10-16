@@ -31,12 +31,15 @@ public partial class MainWindow
     private readonly Action<string> _openSettingsDirectory;
     private readonly IGameAutoStartService? _autoStartService;
     private DesktopPreferences _desktopPreferences = new();
+    internal bool AutoCloseWithGame => _desktopPreferences.AutoCloseWithGame;
+    internal event EventHandler? AutoClosePreferenceChanged;
 
     private void InitializeDesktopPreferences()
     {
         SettingsDirectoryText.Text = DesktopPreferencesStore.DirectoryPath;
         SettingsDirectoryText.ToolTip = SettingsDirectoryText.Text;
         AutoStartCheck.IsEnabled = false;
+        AutoCloseCheck.IsEnabled = _desktopStore is not null;
         if (_desktopStore is null) return;
         try
         {
@@ -44,6 +47,7 @@ public partial class MainWindow
             Topmost = _desktopPreferences.AlwaysOnTop;
             AlwaysOnTopCheck.IsChecked = _desktopPreferences.AlwaysOnTop;
             AutoStartCheck.IsChecked = _desktopPreferences.AutoStartWithGame;
+            AutoCloseCheck.IsChecked = _desktopPreferences.AutoCloseWithGame;
         }
         catch (Exception error) when (error is IOException or InvalidDataException or JsonException or UnauthorizedAccessException)
         {
@@ -77,6 +81,25 @@ public partial class MainWindow
             SetOutcome("Otomatik başlatma hazırlanamadı; Ayarlar'dan kapatıp yeniden açmayı dene.", false);
         }
         finally { AutoStartCheck.IsEnabled = true; }
+    }
+
+    private void AutoClose_Click(object sender, RoutedEventArgs e)
+    {
+        if (_desktopStore is null) return;
+        try
+        {
+            var updated = _desktopPreferences with { AutoCloseWithGame = AutoCloseCheck.IsChecked == true };
+            _desktopStore.Save(updated);
+            _desktopPreferences = updated;
+            AutoClosePreferenceChanged?.Invoke(this, EventArgs.Empty);
+            SetOutcome(updated.AutoCloseWithGame ? "Otomatik kapatma açık; ETS2 kapandığında trainer kapanacak."
+                : "Otomatik kapatma kapalı; trainer oyun kapandıktan sonra açık kalacak.", true);
+        }
+        catch (Exception error) when (error is IOException or UnauthorizedAccessException)
+        {
+            AutoCloseCheck.IsChecked = _desktopPreferences.AutoCloseWithGame;
+            SetOutcome("Otomatik kapatma kaydedilemedi; önceki tercih korunuyor.", false);
+        }
     }
 
     private async void AutoStart_Click(object sender, RoutedEventArgs e)

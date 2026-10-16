@@ -213,7 +213,9 @@ public partial class MainWindow
 
     private void HideMenu_Click(object sender, RoutedEventArgs e) => RequestOverlayDismiss();
 
-    private void QuitTrainer_Click(object sender, RoutedEventArgs e)
+    private void QuitTrainer_Click(object sender, RoutedEventArgs e) => QuitTrainer();
+
+    internal void QuitTrainer()
     {
         ExitOverlay();
         Close();

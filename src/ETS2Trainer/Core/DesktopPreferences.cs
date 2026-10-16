@@ -24,7 +24,8 @@ using System.Text.Json;
 
 namespace ETS2Trainer.Core;
 
-public sealed record DesktopPreferences(bool AlwaysOnTop = false, bool AutoStartWithGame = false);
+public sealed record DesktopPreferences(bool AlwaysOnTop = false, bool AutoStartWithGame = false,
+    bool AutoCloseWithGame = false);
 
 public sealed class DesktopPreferencesStore(string? path = null)
 {
@@ -60,7 +61,7 @@ public sealed class DesktopPreferencesStore(string? path = null)
         if (stream.Length > 4096) throw new InvalidDataException("Interface settings file is too large.");
         var settings = JsonSerializer.Deserialize<Settings>(stream);
         if (settings is not { Version: 1 }) throw new InvalidDataException("Invalid interface settings.");
-        return new(settings.AlwaysOnTop, settings.AutoStartWithGame);
+        return new(settings.AlwaysOnTop, settings.AutoStartWithGame, settings.AutoCloseWithGame);
     }
 
     private void Write(DesktopPreferences preferences)
@@ -70,7 +71,8 @@ public sealed class DesktopPreferencesStore(string? path = null)
         var temporary = destination + "." + Guid.NewGuid().ToString("N") + ".tmp";
         try
         {
-            var bytes = JsonSerializer.SerializeToUtf8Bytes(new Settings(1, preferences.AlwaysOnTop, preferences.AutoStartWithGame),
+            var bytes = JsonSerializer.SerializeToUtf8Bytes(new Settings(1, preferences.AlwaysOnTop,
+                    preferences.AutoStartWithGame, preferences.AutoCloseWithGame),
                 new JsonSerializerOptions { WriteIndented = true });
             using (var stream = new FileStream(temporary, FileMode.CreateNew, FileAccess.Write, FileShare.None, 4096, FileOptions.WriteThrough))
             {
@@ -82,5 +84,6 @@ public sealed class DesktopPreferencesStore(string? path = null)
         finally { if (File.Exists(temporary)) File.Delete(temporary); }
     }
 
-    private sealed record Settings(int Version, bool AlwaysOnTop = false, bool AutoStartWithGame = false);
+    private sealed record Settings(int Version, bool AlwaysOnTop = false, bool AutoStartWithGame = false,
+        bool AutoCloseWithGame = false);
 }
