@@ -1,0 +1,48 @@
+# Publish production source and repository metadata only.
+/*
+!/.gitignore
+!/.gitattributes
+!/.editorconfig
+!/global.json
+!/LICENSE
+!/README.md
+!/CODE_OF_CONDUCT.md
+!/CONTRIBUTING.md
+!/SECURITY.md
+!/build.ps1
+!/Start Trainer.cmd
+!/.github/
+!/.github/**
+!/licenses/
+!/licenses/**
+!/src/
+!/src/**
+
+# Generated files and local settings.
+**/bin/
+**/obj/
+**/.vs/
+**/.idea/
+**/*.user
+**/*.suo
+**/*.log
+**/*.pdb
+**/.env
+**/.env.*
+**/*.pfx
+**/*.p12
+**/AGENTS.md
+**/CLAUDE.md
+**/.agents/
+**/.codex/
+
+# Local development material is never part of the distribution.
+/tests/
+/research/
+/artifacts/
+/backups/
+/tools/
+/native/
+/dist/
+/dist-next/
+/rea-setup-*.json

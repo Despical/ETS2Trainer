@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/Despical/ETS2Trainer#readme
+    about: Read installation, usage and troubleshooting instructions.
+  - name: Downloads
+    url: https://github.com/Despical/ETS2Trainer/releases/latest
+    about: Download the latest portable Windows release.

@@ -1,0 +1,19 @@
+name: Feature request
+description: Suggest an improvement to ETS2Trainer.
+title: '[Feature] '
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What would you like to improve?
+      description: Describe the use case and the limitation you encounter.
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed behavior
+      description: Explain how the feature should work, including any alternatives.
+    validations:
+      required: true
