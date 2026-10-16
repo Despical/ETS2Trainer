@@ -7,7 +7,7 @@
 
 <p align="center">
   <a href="https://github.com/Despical/ETS2Trainer/actions/workflows/build.yml"><img src="https://github.com/Despical/ETS2Trainer/actions/workflows/build.yml/badge.svg" alt="Build"></a>
-  <a href="https://github.com/Despical/ETS2Trainer/releases/latest"><img src="https://img.shields.io/github/v/release/Despical/ETS2Trainer" alt="Latest release"></a>
+  <a href="https://github.com/Despical/ETS2Trainer/releases/latest"><img src="https://img.shields.io/badge/release-v0.7.0-blue" alt="Latest release: v0.7.0"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPLv3-blue" alt="GPLv3 license"></a>
   <img src="https://img.shields.io/badge/platform-Windows%20x64-0078D4" alt="Windows x64">
   <img src="https://img.shields.io/badge/languages-English%20%2F%20T%C3%BCrk%C3%A7e-F3B65A" alt="English and Turkish">
